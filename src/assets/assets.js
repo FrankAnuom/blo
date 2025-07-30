@@ -7,7 +7,7 @@ import blog_pic_6 from './blog_pic_6.png';
 import blog_pic_7 from './blog_pic_7.png';
 import blog_pic_8 from './blog_pic_8.png';
 import blog_pic_9 from './blog_pic_9.png';
-import about from './about.jpeg';
+import about from './about.jpg';
 import blog_pic_10 from './blog_pic_10.png';
 import facebook_icon from './facebook_icon.svg'
 import googleplus_icon from './googleplus_icon.svg'

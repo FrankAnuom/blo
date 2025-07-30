@@ -5,9 +5,21 @@ import Navbar from "../components/Navbar";
 import Moment from "moment";
 import Footer from "../components/Footer";
 import Loader from "../components/Loader";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
+import {WhatsappShareButton,
+   WhatsappIcon, 
+   FacebookShareButton, 
+   FacebookIcon, 
+   TwitterShareButton,
+   TwitterIcon} from 'react-share'
+
 
 function Blog() {
   const { id } = useParams();
+  const shareUrl = window.location.href;
+
+  const {axios} = useAppContext();
 
   const [data, setData] = useState(null);
 
@@ -17,17 +29,45 @@ function Blog() {
   const [content, setContent] = useState("");
 
   const fetchBlogData = async () => {
-    const data = blog_data.find((item) => item._id === id);
-    setData(data);
+    try {
+      const {data} = await axios.get(`/api/blog/${id}`)
+      data.success? setData(data.blog) : toast.error(data.message)
+    } catch (error) {
+      toast.error(error.message)
+    }
   };
 
   const fetchComments = async () => {
-    setComments(comments_data);
+    try {
+      const {data} = await  axios.post('/api/blog/comments', {blogId: id})
+      if(data.success){
+        setComments(data.comments)
+      }else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
   };
 
   const addComment = async (e) => {
     e.preventDefault();
+try {
+  const {data} = await  axios.post('/api/blog/add-comment', {blog: id, name, content})
+  if(data.success){
+    toast.success(data.message)
+    setName(' ')
+    setContent(' ')
+  }else{
+    toast.error(data.message)
+  }
+} catch (error) {
+  toast.error(error.message)
+}
+
   };
+
+
 
   useEffect(() => {
     fetchBlogData();
@@ -116,9 +156,21 @@ function Blog() {
         <div className="my-24 max-w-3xl mx-auto">
           <p className="font-semibold my-4">Share</p>
           <div className="flex">
-            <img src={assets.facebook_icon} width={50} alt="" />
-            <img src={assets.twitter_icon} width={50} alt="" />
-            <img src={assets.googleplus_icon} width={50} alt="" />
+
+            <WhatsappShareButton url={shareUrl}>
+              <WhatsappIcon/>
+            </WhatsappShareButton>
+
+            <FacebookShareButton url={shareUrl}>
+              <FacebookIcon/>
+            </FacebookShareButton>
+
+            <TwitterShareButton url={shareUrl}>
+              <TwitterIcon/>
+            </TwitterShareButton>
+
+
+
           </div>
         </div>
       </div>

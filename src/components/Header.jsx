@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useRef } from "react";
 import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
 
 function Header() {
-  // ✅ Step 1: Centralized header data
+  const { setInput, input } = useAppContext();
+  const inputRef = useRef();
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    setInput(inputRef.current.value);
+  };
+  const onClear = () =>{
+    setInput('')
+    inputRef.current.value =''
+  }
+
   const headerData = {
     tagText: "New AI features integrated",
-    title: `I'm Neoryte, and <span class="text-primary">THIS</span> is my <br /> Blog`,
+    title: `I'm Barakat, and <span class="text-primary">THIS</span> is my Blog`,
+    
     subtitle:
       "Passionate about health and wellness, delivering trusted insights and real-life stories. Each piece is crafted to inform, inspire, and empower healthier living.",
   };
@@ -31,8 +44,12 @@ function Header() {
         </p>
 
         {/* Search Form */}
-        <form className="flex justify-between max-w-lg max-sm:scale-75 mx-auto border border-gray-300 bg-white rounded overflow-hidden">
+        <form
+          onSubmit={onSubmitHandler}
+          className="flex justify-between max-w-lg max-sm:scale-75 mx-auto border border-gray-300 bg-white rounded overflow-hidden"
+        >
           <input
+            ref={inputRef}
             className="w-full pl-4 outline-none"
             type="text"
             placeholder="Search for post"
@@ -45,6 +62,12 @@ function Header() {
           </button>
         </form>
       </div>
+      <div className="text-center">
+        {
+        input && 
+        <button onClick={onClear}
+         className="border font-light text-xs py-1 px-3 rounded-sm shadow-custom-sm cursor-pointer">Clear Search </button>}
+</div>
 
       {/* Background Image */}
       <img
